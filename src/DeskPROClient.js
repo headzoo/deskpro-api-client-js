@@ -3,6 +3,9 @@ const axios = require('axios');
 
 const API_PATH = '/api/v2';
 
+/**
+ * Makes requests to the DeskPRO API.
+ */
 class DeskPROClient {
   
   /**
@@ -11,9 +14,27 @@ class DeskPROClient {
    * @param {String} helpdeskUrl
    */
   constructor(helpdeskUrl) {
-    this.helpdeskUrl = helpdeskUrl;
-    this.authKey     = null;
-    this.authToken   = null;
+    this.authKey   = null;
+    this.authToken = null;
+    this.client    = axios.create({
+      baseURL: `${helpdeskUrl}${API_PATH}`
+    });
+  }
+  
+  /**
+   * @returns {axios}
+   */
+  getAxios() {
+    return this.client;
+  }
+  
+  /**
+   * @param {axios} client
+   * @returns {DeskPROClient}
+   */
+  setAxios(client) {
+    this.client = client;
+    return this;
   }
   
   /**
@@ -86,31 +107,30 @@ class DeskPROClient {
    */
   request(method, endpoint, body = null, headers = {}) {
     const config = {
-      url: this._makeUrl(endpoint),
-      method: method,
+      url: endpoint,
       data: body,
+      method: method,
       headers: this._makeHeaders(headers)
     };
     
-    return axios.request(config)
+    return this.client.request(config)
       .then((resp) => {
         if (resp.data === undefined || resp.data.data === undefined) {
           return resp;
         }
-        return new Response(resp.data.data, resp.data.meta, resp.data.linked);
+        
+        return new Response(
+          resp.data.data,
+          resp.data.meta,
+          resp.data.linked
+        );
       })
       .catch((err) => {
+        if (err.response.data === undefined) {
+          throw err;
+        }
         throw err.response.data;
       });
-  }
-  
-  /**
-   * @param {String} endpoint
-   * @returns {String}
-   * @private
-   */
-  _makeUrl(endpoint) {
-    return `${this.helpdeskUrl}${API_PATH}/${endpoint.replace(/^\/+|\/+$/g, '')}`;
   }
   
   /**
@@ -119,7 +139,7 @@ class DeskPROClient {
    * @returns {Object}
    * @private
    */
-  _makeHeaders(headers) {
+  _makeHeaders(headers = {}) {
     if (this.authToken) {
       headers['Authorization'] = `token ${this.authToken}`;
     } else if (this.authKey) {
