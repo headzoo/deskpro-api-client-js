@@ -1,6 +1,12 @@
 DeskPRO API Node Client
 =======================
 
+## Installation
+
+```
+npm install --save @deskpro/api-client-js
+```
+
 ## Basic usage
 
 ```js
