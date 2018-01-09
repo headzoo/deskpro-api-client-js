@@ -1,5 +1,5 @@
-DeskPRO API JavaScript Client
-=============================
+DeskPRO API Node Client
+=======================
 
 Basic usage:
 
