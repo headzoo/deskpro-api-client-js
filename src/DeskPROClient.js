@@ -1,5 +1,6 @@
 const Response = require('./Response');
 const axios = require('axios');
+const utils = require('./utils');
 
 const API_PATH = '/api/v2';
 
@@ -14,9 +15,11 @@ class DeskPROClient {
    * @param {String} helpdeskUrl
    */
   constructor(helpdeskUrl) {
-    this.authKey   = null;
-    this.authToken = null;
-    this.client    = axios.create({
+    this.authKey        = null;
+    this.authToken      = null;
+    this.logger         = null;
+    this.defaultHeaders = {};
+    this.client         = axios.create({
       baseURL: `${helpdeskUrl}${API_PATH}`
     });
   }
@@ -56,6 +59,26 @@ class DeskPROClient {
    */
   setAuthKey(personId, key) {
     this.authKey = `${personId}:${key}`;
+    return this;
+  }
+  
+  /**
+   * 
+   * @param {Object} defaultHeaders
+   * @returns {DeskPROClient}
+   */
+  setDefaultHeaders(defaultHeaders) {
+    this.defaultHeaders = defaultHeaders;
+    return this;
+  }
+  
+  /**
+   * 
+   * @param {Function} logger
+   * @returns {DeskPROClient}
+   */
+  setLogger(logger) {
+    this.logger = logger;
     return this;
   }
   
@@ -106,19 +129,42 @@ class DeskPROClient {
    * @returns {Promise.<T>|*}
    */
   request(method, endpoint, body = null, headers = {}) {
+    const reqHeaders = this._makeHeaders(headers);
     const config = {
       url: endpoint,
       data: body,
       method: method,
-      headers: this._makeHeaders(headers)
+      headers: reqHeaders
     };
+    
+    if (body && body.multipart !== undefined) {
+      return utils.getFormHeaders(body.multipart)
+        .then((formHeaders) => {
+          config.data    = body.multipart;
+          config.headers = Object.assign({}, config.headers, formHeaders);
+          return this._sendRequest(config);
+        });
+    }
+    
+    return this._sendRequest(config);
+  }
+  
+  /**
+   * @param {*} config
+   * @returns {Promise.<T>|*}
+   * @private
+   */
+  _sendRequest(config) {
+    if (this.logger) {
+      this.logger(`DeskPROClient: ${config.method} ${config.url}: Headers = ${JSON.stringify(config.headers)}`);
+    }
     
     return this.client.request(config)
       .then((resp) => {
         if (resp.data === undefined || resp.data.data === undefined) {
           return resp;
         }
-        
+      
         return new Response(
           resp.data.data,
           resp.data.meta,
@@ -140,13 +186,16 @@ class DeskPROClient {
    * @private
    */
   _makeHeaders(headers = {}) {
-    if (this.authToken) {
-      headers['Authorization'] = `token ${this.authToken}`;
-    } else if (this.authKey) {
-      headers['Authorization'] = `key ${this.authKey}`;
+    const created = Object.assign({}, this.defaultHeaders, headers);
+    if (created['Authorization'] === undefined) {
+      if (this.authToken) {
+        created['Authorization'] = `token ${this.authToken}`;
+      } else if (this.authKey) {
+        created['Authorization'] = `key ${this.authKey}`;
+      }
     }
     
-    return headers;
+    return created;
   }
 }
 
