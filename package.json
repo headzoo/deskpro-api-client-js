@@ -2,7 +2,7 @@
   "name": "@deskpro/api-client-js",
   "version": "1.0.0",
   "description": "Node API client for use with the Deskpro v2 API",
-  "main": "dist/index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
