@@ -1,6 +1,6 @@
 {
   "name": "@deskpro/api-client-js",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Node API client for use with the Deskpro v2 API",
   "main": "src/index.js",
   "scripts": {

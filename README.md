@@ -81,6 +81,7 @@ client.post('/blobs/temp', body)
 ```
 
 ## Setting default headers
+Use the `setDefaultHeaders()` method to set headers that get sent with each request.
 
 ```js
 const DeskPROClient = require('./src/DeskPROClient');
@@ -128,7 +129,7 @@ const client = new DeskPROClient('http://deskpro-dev.com');
 client.setAuthKey(1, 'dev-admin-code');
 
 // @see https://github.com/axios/axios#global-axios-defaults
-client.getAxios().defaults.timeout = 2500;
+client.getHTTPClient().defaults.timeout = 2500;
 
 client.get('/articles')
   .then((resp) => {

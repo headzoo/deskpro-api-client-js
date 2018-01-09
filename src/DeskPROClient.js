@@ -1,4 +1,3 @@
-const Response = require('./Response');
 const axios = require('axios');
 const utils = require('./utils');
 
@@ -19,7 +18,7 @@ class DeskPROClient {
     this.authToken      = null;
     this.logger         = null;
     this.defaultHeaders = {};
-    this.client         = axios.create({
+    this.httpClient     = axios.create({
       baseURL: `${helpdeskUrl}${API_PATH}`
     });
   }
@@ -27,16 +26,16 @@ class DeskPROClient {
   /**
    * @returns {axios}
    */
-  getAxios() {
-    return this.client;
+  getHTTPClient() {
+    return this.httpClient;
   }
   
   /**
-   * @param {axios} client
+   * @param {axios} httpClient
    * @returns {DeskPROClient}
    */
-  setAxios(client) {
-    this.client = client;
+  setHTTPClient(httpClient) {
+    this.httpClient = httpClient;
     return this;
   }
   
@@ -60,6 +59,13 @@ class DeskPROClient {
   setAuthKey(personId, key) {
     this.authKey = `${personId}:${key}`;
     return this;
+  }
+  
+  /**
+   * @returns {*}
+   */
+  getDefaultHeaders() {
+    return this.defaultHeaders;
   }
   
   /**
@@ -129,12 +135,11 @@ class DeskPROClient {
    * @returns {Promise.<T>|*}
    */
   request(method, endpoint, body = null, headers = {}) {
-    const reqHeaders = this._makeHeaders(headers);
     const config = {
-      url: endpoint,
-      data: body,
-      method: method,
-      headers: reqHeaders
+      url:     endpoint,
+      data:    body,
+      method:  method,
+      headers: this._makeHeaders(headers)
     };
     
     if (body && body.multipart !== undefined) {
@@ -159,17 +164,12 @@ class DeskPROClient {
       this.logger(`DeskPROClient: ${config.method} ${config.url}: Headers = ${JSON.stringify(config.headers)}`);
     }
     
-    return this.client.request(config)
+    return this.httpClient.request(config)
       .then((resp) => {
         if (resp.data === undefined || resp.data.data === undefined) {
           return resp;
         }
-      
-        return new Response(
-          resp.data.data,
-          resp.data.meta,
-          resp.data.linked
-        );
+        return resp.data;
       })
       .catch((err) => {
         if (err.response.data === undefined) {
