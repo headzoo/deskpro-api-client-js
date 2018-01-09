@@ -1,7 +1,7 @@
 DeskPRO API Node Client
 =======================
 
-Basic usage:
+## Basic usage
 
 ```js
 const DeskPROClient = require('./src/DeskPROClient');
@@ -74,7 +74,7 @@ client.post('/blobs/temp', body)
   });
 ```
 
-Setting default headers:
+## Setting default headers
 
 ```js
 const DeskPROClient = require('./src/DeskPROClient');
@@ -94,7 +94,8 @@ client.get('/articles')
   });
 ```
 
-Logging:
+## Logging
+Pass a function to the `setLogger()` method to enable request logging.
 
 ```js
 const DeskPROClient = require('./src/DeskPROClient');
@@ -112,7 +113,7 @@ client.get('/articles')
   });
 ```
 
-Customizing the Axios configuration:
+## Customizing the Axios configuration
 
 ```js
 const DeskPROClient = require('./src/DeskPROClient');
