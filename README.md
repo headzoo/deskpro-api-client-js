@@ -1,5 +1,5 @@
-Deskpro API Node Client
-=======================
+Deskpro API JavaScript Client
+=============================
 
 * [Installing](#installing)
 * [Basic Usage](#basic-usage)
