@@ -31,12 +31,12 @@ const API_PATH       = '/api/v2';
 const AUTH_HEADER    = 'Authorization';
 const AUTH_TOKEN_KEY = 'token';
 const AUTH_KEY_KEY   = 'key';
-const LOG_PREFIX     = 'DeskPROClient';
+const LOG_PREFIX     = 'DeskproClient';
 
 /**
- * Makes requests to the DeskPRO API.
+ * Makes requests to the Deskpro API.
  */
-class DeskPROClient {
+class DeskproClient {
   
   /**
    * Constructor
@@ -71,7 +71,7 @@ class DeskPROClient {
    * Sets the HTTP client used to make API requests
    * 
    * @param {axios} httpClient
-   * @returns {DeskPROClient}
+   * @returns {DeskproClient}
    */
   setHTTPClient(httpClient) {
     this.httpClient = httpClient;
@@ -83,7 +83,7 @@ class DeskPROClient {
    * 
    * @param {Number} personId The ID of the person being authenticated
    * @param {String} token    The authentication token
-   * @returns {DeskPROClient}
+   * @returns {DeskproClient}
    */
   setAuthToken(personId, token) {
     this.authToken = `${personId}:${token}`;
@@ -95,7 +95,7 @@ class DeskPROClient {
    * 
    * @param {Number} personId The ID of the person being authenticated
    * @param {String} key      The authentication key
-   * @returns {DeskPROClient}
+   * @returns {DeskproClient}
    */
   setAuthKey(personId, key) {
     this.authKey = `${personId}:${key}`;
@@ -115,7 +115,7 @@ class DeskPROClient {
    * Sets the headers sent with each request
    * 
    * @param {Object} defaultHeaders The headers to send
-   * @returns {DeskPROClient}
+   * @returns {DeskproClient}
    */
   setDefaultHeaders(defaultHeaders) {
     this.defaultHeaders = defaultHeaders;
@@ -126,7 +126,7 @@ class DeskPROClient {
    * Sets the function used for request logging
    * 
    * @param {Function} logger A function which gets called to log requests
-   * @returns {DeskPROClient}
+   * @returns {DeskproClient}
    */
   setLogger(logger) {
     this.logger = logger;
@@ -293,4 +293,4 @@ class DeskPROClient {
   }
 }
 
-module.exports = DeskPROClient;
+module.exports = DeskproClient;

@@ -27,15 +27,15 @@
 const expect = require('chai').expect;
 const axios = require('axios');
 const MockAdapter = require('axios-mock-adapter');
-const DeskPROClient = require('../src/DeskPROClient');
+const DeskproClient = require('../src/DeskproClient');
 
-describe('DeskPROClient', () => {
+describe('DeskproClient', () => {
   let mock   = null;
   let client = null;
   
   beforeEach(() => {
     mock   = new MockAdapter(axios);
-    client = new DeskPROClient('https://deskpro-dev.com', axios);
+    client = new DeskproClient('https://deskpro-dev.com', axios);
   });
   
   it('get', () => {

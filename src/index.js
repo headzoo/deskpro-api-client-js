@@ -24,6 +24,6 @@
  * ~ Thanks, Everyone at Team DeskPRO
  */
 
-const DeskPROClient = require('./DeskPROClient');
+const DeskproClient = require('./DeskproClient');
 
-module.exports = DeskPROClient;
+module.exports = DeskproClient;
