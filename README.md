@@ -59,6 +59,8 @@ client.post('/articles', body)
 
 Uploading files:
 
+Sending values using multipart/form-data, for instance to upload files, is done by passing an object with the property "multipart" to the `post()` or `put()` methods.
+
 ```js
 const DeskPROClient = require('./src/DeskPROClient');
 const FormData = require('form-data');
