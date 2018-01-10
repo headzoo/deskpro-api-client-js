@@ -254,7 +254,7 @@ class DeskPROClient {
     if (this.logger) {
       this.logger(`${LOG_PREFIX}: ${config.method} ${config.url}: Headers = ${JSON.stringify(config.headers)}`);
     }
-    console.log(config.url);
+    
     return this.httpClient.request(config)
       .then((resp) => {
         self.lastHTTPResponse = resp;
