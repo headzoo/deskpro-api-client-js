@@ -162,3 +162,10 @@ client.get('/articles')
     console.log(client.getLastHTTPRequestException());
   });
 ```
+
+## Testing
+Tests are run using the npm "test" script.
+
+```
+npm test
+```

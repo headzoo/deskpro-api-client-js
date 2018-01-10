@@ -4,11 +4,16 @@
   "description": "Node API client for use with the Deskpro v2 API",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "DeskPRO <team@deskpro.com>",
   "license": "BSD-3-Clause",
   "dependencies": {
     "axios": "^0.17.1"
+  },
+  "devDependencies": {
+    "axios-mock-adapter": "^1.10.0",
+    "chai": "^4.1.2",
+    "mocha": "^4.1.0"
   }
 }

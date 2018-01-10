@@ -41,10 +41,11 @@ class DeskPROClient {
   /**
    * Constructor
    * 
-   * @param {String} helpdeskUrl The base URL to the DeskPRO instance
-   * @param {Function} logger    A function which gets called to log requests 
+   * @param {String}   helpdeskUrl The base URL to the DeskPRO instance
+   * @param {axios}    httpClient  The HTTP client used to make API requests
+   * @param {Function} logger      A function which gets called to log requests 
    */
-  constructor(helpdeskUrl, logger = null) {
+  constructor(helpdeskUrl, httpClient = null, logger = null) {
     this.authKey          = null;
     this.authToken        = null;
     this.lastHTTPRequest  = null;
@@ -52,7 +53,7 @@ class DeskPROClient {
     this.lastHTTPRequestException = null;
     this.defaultHeaders   = {};
     this.logger           = logger;
-    this.httpClient       = axios.create({
+    this.httpClient       = httpClient || axios.create({
       baseURL: `${helpdeskUrl}${API_PATH}`
     });
   }
@@ -247,8 +248,10 @@ class DeskPROClient {
     return this.httpClient.request(config)
       .then((resp) => {
         self.lastHTTPResponse = resp;
-        if (resp.data === undefined || resp.data.data === undefined) {
+        if (resp.data === undefined) {
           return resp;
+        } else if (resp.data.data === undefined) {
+          return resp.data;
         }
         return resp.data;
       })
