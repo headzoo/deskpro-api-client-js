@@ -1,5 +1,6 @@
 Deskpro API JavaScript Client
 =============================
+JavaScript client for use with the Deskpro API.
 
 * [Installing](#installing)
 * [Basic Usage](#basic-usage)
