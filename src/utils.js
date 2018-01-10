@@ -24,21 +24,64 @@
  * ~ Thanks, Everyone at Team DeskPRO
  */
 
-module.exports = {
-  /**
-   * @param {Object} form
-   * @returns {Promise}
-   */
-  getFormHeaders: (form) => {
-    return new Promise((resolve, reject) => {
-      form.getLength((err, length) => {
-        if(err) {
-          return reject(err);
-        }
-        resolve(Object.assign({
-          'Content-Length': length
-        }, form.getHeaders()));
-      });
+/**
+ * @param {Object} form
+ * @returns {Promise}
+ */
+function getFormHeaders(form) {
+  return new Promise((resolve, reject) => {
+    form.getLength((err, length) => {
+      if(err) {
+        return reject(err);
+      }
+      resolve(Object.assign({
+        'Content-Length': length
+      }, form.getHeaders()));
     });
+  });
+}
+
+/**
+ * Turns an object into a HTTP query string
+ * 
+ * @param {Object} params
+ * @returns {string}
+ */
+function buildQueryString(params) {
+  return Object.keys(params)
+    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+    .join('&');
+}
+
+/**
+ * Modifies the url by adding a query string and interpolating {placeholders}
+ * 
+ * @param {String} url
+ * @param {Object} params
+ * @returns {String}
+ */
+function interpolateURL(url, params) {
+  for(let key in params) {
+    if (params.hasOwnProperty(key)) {
+      const r = new RegExp('{' + key + '}');
+      const found = url.match(r);
+      if (found) {
+        url = url.replace(found[0], params[key]);
+        delete params[key];
+      }
+    }
   }
+  
+  const query = buildQueryString(params);
+  if (query) {
+    url = `${url}?${query}`;
+  }
+  
+  return url;
+}
+
+module.exports = {
+  getFormHeaders,
+  buildQueryString,
+  interpolateURL
 };

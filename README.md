@@ -89,6 +89,26 @@ client.post('/blobs/temp', body)
   });
 ```
 
+Interpolating URLs:
+
+```js
+const DeskPROClient = require('./src/DeskPROClient');
+
+const client = new DeskPROClient('http://deskpro-dev.com');
+client.setAuthKey(1, 'dev-admin-code');
+
+const params = {
+  id:       5,
+  parentId: 101,
+  limit:    25,
+  offset:   100
+};
+
+// The params are interplated into the endpoint URL so it becomes:
+// "/articles/101/5?limit=25&offset=100"
+client.get('/articles/{parentId}/{id}', params);
+```
+
 ## Default Headers
 Use the `setDefaultHeaders()` method to set headers that get sent with each request.
 

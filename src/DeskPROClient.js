@@ -164,10 +164,12 @@ class DeskPROClient {
    * Sends a GET request to the API
    * 
    * @param {String} endpoint The API endpoint (path)
+   * @param {Object} params   Query and placeholder params
+   * 
    * @returns {Promise.<T>}
    */
-  get(endpoint) {
-    return this.request('GET', endpoint);
+  get(endpoint, params = {}) {
+    return this.request('GET', endpoint, null, params);
   }
   
   /**
@@ -175,10 +177,12 @@ class DeskPROClient {
    * 
    * @param {String} endpoint The API endpoint (path)
    * @param {*}      body     Values sent in the request body
+   * @param {Object} params   Query and placeholder params
+   * 
    * @returns {Promise.<T>}
    */
-  post(endpoint, body = null) {
-    return this.request('POST', endpoint, body);
+  post(endpoint, body = null, params = {}) {
+    return this.request('POST', endpoint, body, params);
   }
   
   /**
@@ -186,20 +190,24 @@ class DeskPROClient {
    * 
    * @param {String} endpoint The API endpoint (path)
    * @param {*}      body     Values sent in the request body
+   * @param {Object} params   Query and placeholder params
+   * 
    * @returns {Promise.<T>}
    */
-  put(endpoint, body = null) {
-    return this.request('PUT', endpoint, body);
+  put(endpoint, body = null, params = {}) {
+    return this.request('PUT', endpoint, body, params);
   }
   
   /**
    * Sends a DELETE request to the API
    * 
    * @param {String} endpoint The API endpoint (path)
+   * @param {Object} params   Query and placeholder params
+   * 
    * @returns {Promise.<T>}
    */
-  del(endpoint) {
-    return this.request('DELETE', endpoint);
+  del(endpoint, params = {}) {
+    return this.request('DELETE', endpoint, null, params);
   }
   
   /**
@@ -208,12 +216,14 @@ class DeskPROClient {
    * @param {String} method   The HTTP method to use, e.g. 'GET', 'POST', etc
    * @param {String} endpoint The API endpoint (path)
    * @param {*}      body     Values sent in the request body
+   * @param {Object} params   Query and placeholder params
    * @param {Object} headers  Additional headers to send with the request
+   * 
    * @returns {Promise.<T>}
    */
-  request(method, endpoint, body = null, headers = {}) {
+  request(method, endpoint, body = null, params = {}, headers = {}) {
     const config = {
-      url:     endpoint,
+      url:     utils.interpolateURL(endpoint, params),
       data:    body,
       method:  method,
       headers: this._makeHeaders(headers)
@@ -233,8 +243,8 @@ class DeskPROClient {
   
   /**
    * @param {*} config The request configuration
+   * 
    * @returns {Promise.<T>}
-   * @private
    */
   _sendRequest(config) {
     const self = this;
@@ -244,7 +254,7 @@ class DeskPROClient {
     if (this.logger) {
       this.logger(`${LOG_PREFIX}: ${config.method} ${config.url}: Headers = ${JSON.stringify(config.headers)}`);
     }
-    
+    console.log(config.url);
     return this.httpClient.request(config)
       .then((resp) => {
         self.lastHTTPResponse = resp;
@@ -266,8 +276,8 @@ class DeskPROClient {
   
   /**
    * @param {Object} headers Additional headers to add
+   * 
    * @returns {Object}
-   * @private
    */
   _makeHeaders(headers = {}) {
     const created = Object.assign({}, this.defaultHeaders, headers);
