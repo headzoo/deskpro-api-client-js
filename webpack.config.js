@@ -24,9 +24,26 @@
  * ~ Thanks, Everyone at Team DeskPRO
  */
 
-const DeskproClient = require('./DeskproClient');
+const path = require('path');
 
-if (window !== undefined) {
-  window.DeskproClient = DeskproClient;
-}
-module.exports = DeskproClient;
+module.exports = {
+    entry: './src/index.js',
+    output: {
+        path: path.resolve('./dist'),
+        filename: 'index.js',
+        library: '@deskpro/deskpro-api-client-javascript',
+        libraryTarget: 'umd'
+    },
+    module: {
+        loaders: [
+          {
+            test: /\.js$/,
+            exclude: /(node_modules)/,
+            loader: 'babel-loader'
+          }
+        ]
+    },
+    resolve: {
+      extensions: ['.js']
+    }
+};

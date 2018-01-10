@@ -1,9 +1,11 @@
 {
-  "name": "@deskpro/api-client-node",
-  "version": "0.0.1",
-  "description": "Node API client for use with the Deskpro v2 API",
+  "name": "@deskpro/deskpro-api-client-javascript",
+  "version": "2.0.0",
+  "description": "JavaScript client for use with the Deskpro API.",
   "main": "src/index.js",
   "scripts": {
+    "build": "webpack -p",
+    "prepublish": "npm run build",
     "test": "mocha"
   },
   "author": "DeskPRO <team@deskpro.com>",
@@ -13,7 +15,12 @@
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.10.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-0": "^6.24.1",
     "chai": "^4.1.2",
-    "mocha": "^4.1.0"
+    "mocha": "^4.1.0",
+    "webpack": "^3.10.0"
   }
 }
