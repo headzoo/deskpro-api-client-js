@@ -37,7 +37,7 @@ client.get('/articles')
   });
 ```
 
-### Posting values
+#### Posting values
 
 ```js
 const DeskproClient = require('@deskpro/api-client-node');
@@ -61,7 +61,7 @@ client.post('/articles', body)
   });
 ```
 
-### Uploading files
+#### Uploading files
 
 Sending values using multipart/form-data, for instance to upload files, is done by passing an object with the property "multipart" to the `post()` or `put()` methods.
 
@@ -93,7 +93,7 @@ client.post('/blobs/temp', body)
   });
 ```
 
-### Interpolating URLs
+#### Interpolating URLs
 
 ```js
 const DeskproClient = require('@deskpro/api-client-node');
