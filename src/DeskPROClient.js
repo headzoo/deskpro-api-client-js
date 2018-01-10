@@ -45,11 +45,14 @@ class DeskPROClient {
    * @param {Function} logger    A function which gets called to log requests 
    */
   constructor(helpdeskUrl, logger = null) {
-    this.authKey        = null;
-    this.authToken      = null;
-    this.defaultHeaders = {};
-    this.logger         = logger;
-    this.httpClient     = axios.create({
+    this.authKey          = null;
+    this.authToken        = null;
+    this.lastHTTPRequest  = null;
+    this.lastHTTPResponse = null;
+    this.lastHTTPRequestException = null;
+    this.defaultHeaders   = {};
+    this.logger           = logger;
+    this.httpClient       = axios.create({
       baseURL: `${helpdeskUrl}${API_PATH}`
     });
   }
@@ -130,6 +133,33 @@ class DeskPROClient {
   }
   
   /**
+   * Returns the request used during the last operation
+   * 
+   * @returns {*}
+   */
+  getLastHTTPRequest() {
+    return this.lastHTTPRequest;
+  }
+  
+  /**
+   * Returns the response received from the last operation
+   * 
+   * @returns {*}
+   */
+  getLastHTTPResponse() {
+    return this.lastHTTPResponse;
+  }
+  
+  /**
+   * Returns any exception created during the last operation
+   * 
+   * @returns {*}
+   */
+  getLastHTTPRequestException() {
+    return this.lastHTTPRequestException;
+  }
+  
+  /**
    * Sends a GET request to the API
    * 
    * @param {String} endpoint The API endpoint (path)
@@ -206,18 +236,24 @@ class DeskPROClient {
    * @private
    */
   _sendRequest(config) {
+    const self = this;
+    this.lastHTTPRequestException =  null;
+    this.lastHTTPRequest = config;
+    
     if (this.logger) {
       this.logger(`${LOG_PREFIX}: ${config.method} ${config.url}: Headers = ${JSON.stringify(config.headers)}`);
     }
     
     return this.httpClient.request(config)
       .then((resp) => {
+        self.lastHTTPResponse = resp;
         if (resp.data === undefined || resp.data.data === undefined) {
           return resp;
         }
         return resp.data;
       })
       .catch((err) => {
+        self.lastHTTPRequestException = err;
         if (err.response.data === undefined) {
           throw err;
         }
